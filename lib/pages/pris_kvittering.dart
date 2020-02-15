@@ -50,29 +50,33 @@ class _PrisKvitteringState extends State<PrisKvittering> {
                       ))),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                            width: 5, color: Theme.of(context).cardColor),
-                        borderRadius: BorderRadius.all(Radius.circular(45)),
-                        color: Theme.of(context).highlightColor),
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                        child: Icon(
-                          Icons.receipt,
-                          size: 45,
-                          color: Theme.of(context).cardColor,
-                        ))),
-              ),
-            ),
+            buildReceiptIcon(context),
           ],
         ),
       ),
     );
+  }
+
+  Padding buildReceiptIcon(BuildContext context) {
+    return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          width: 5, color: Theme.of(context).cardColor),
+                      borderRadius: BorderRadius.all(Radius.circular(45)),
+                      color: Theme.of(context).highlightColor),
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                      child: Icon(
+                        Icons.receipt,
+                        size: 45,
+                        color: Theme.of(context).cardColor,
+                      ))),
+            ),
+          );
   }
 
   List<Widget> buildHeader() {

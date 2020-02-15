@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
 class NavigationIcon extends StatelessWidget {
+
+  final IconData icon;
+
   const NavigationIcon({
     Key key,
+    this.icon
   }) : super(key: key);
 
   @override
