@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AddressAutoCompleteProvider implements AsyncProvider<List<GAddress>> {
   String sessionToken;
-
+  String lastSearch;
   Timer t;
 
   @override
@@ -23,28 +23,20 @@ class AddressAutoCompleteProvider implements AsyncProvider<List<GAddress>> {
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String sessionTokenKey = "autocomplete_address_substring";
-    String lastSubstringKey = "autocomplete_session_token";
-
-    String lastSubString = prefs.containsKey(lastSubstringKey)
-        ? prefs.get(lastSubstringKey)
-        : null;
 
     if (prefs.containsKey(sessionTokenKey) &&
-            lastSubString != null &&
-            (addressSubstring.toString().startsWith(lastSubString)) ||
-        (lastSubString.toString().startsWith(addressSubstring))) {
+            lastSearch != null &&
+            (addressSubstring.toString().startsWith(lastSearch)) ||
+        (lastSearch.toString().startsWith(addressSubstring))) {
       /**
        * If the user is deleting, we dont auto complete.
        */
-      if (lastSubString.length > addressSubstring.toString().length) {
-        return null;
-      }
       sessionToken = prefs.get(sessionTokenKey);
-      prefs.setString(lastSubstringKey, addressSubstring);
+      lastSearch = addressSubstring;
     } else {
       sessionToken = Uuid().generateV4();
       prefs.setString(sessionTokenKey, sessionToken);
-      prefs.setString(lastSubstringKey, addressSubstring);
+      lastSearch = addressSubstring;
     }
 
     String baseUrl =

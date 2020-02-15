@@ -23,8 +23,14 @@ class _StartRuteOplysningerState extends SearchInterface<StartRuteOplysninger>
   }
 
   void goToTilfoejRuter() {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => TilfoejRuter(selectedAddress)));
+    if (selectedAddress != null) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => TilfoejRuter(selectedAddress)));
+    } else {
+      displayErrorUserDidNotPickAddress();
+    }
   }
 
   void displayErrorUserDidNotPickAddress() {
