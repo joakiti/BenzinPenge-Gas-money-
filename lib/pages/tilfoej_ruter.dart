@@ -4,6 +4,7 @@ import 'package:benzin_penge/model/address.dart';
 import 'package:benzin_penge/pages/pris_kvittering.dart';
 import 'package:benzin_penge/ui_components/address_search.dart';
 import 'package:benzin_penge/ui_components/house_addresses.dart';
+import 'package:benzin_penge/ui_components/nav_icon.dart';
 import 'package:flutter/material.dart';
 
 class TilfoejRuter extends StatefulWidget {
@@ -15,8 +16,8 @@ class TilfoejRuter extends StatefulWidget {
   _TilfoejRuterState createState() => _TilfoejRuterState();
 }
 
-class _TilfoejRuterState extends SearchInterface<TilfoejRuter> with ErrorMessage {
-
+class _TilfoejRuterState extends SearchInterface<TilfoejRuter>
+    with ErrorMessage {
   Set<GAddress> addresses = new Set();
 
   @override
@@ -43,18 +44,7 @@ class _TilfoejRuterState extends SearchInterface<TilfoejRuter> with ErrorMessage
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      floatingActionButton: shouldShowFloatingActionButton
-          ? FloatingActionButton.extended(
-              backgroundColor:
-                  addresses.length > 1 ? Theme.of(context).highlightColor : Colors.white30,
-              onPressed: addresses.length > 1
-                  ? goToTilfoejRuter
-                  : () {
-                      showSnackBarError(scaffoldKey,
-                          "Du har ikke indtastet nok addresser til at danne en rute.");
-                    },
-              label: Text("Næste", style: TextStyle(fontWeight: FontWeight.bold),))
-          : Container(),
+      floatingActionButton: displayActionButton(),
       body: SafeArea(
         child: Column(
           children: <Widget>[
@@ -78,18 +68,34 @@ class _TilfoejRuterState extends SearchInterface<TilfoejRuter> with ErrorMessage
               child: Text("Ruten beregnes i rækkefølge af tilføjelser"),
             ),
             AddressSearch(
-              lookingUpResults: lookingUpResults,
-              parent: this,
-              scaffoldKey: scaffoldKey,
-              onAddressSelected: (v) {
-                setState(() {
-                  addresses.add(v);
-                });
-              },
-            )
+                endRowWidget: NavigationIcon(),
+                lookingUpResults: lookingUpResults,
+                parent: this,
+                scaffoldKey: scaffoldKey,
+                onAddressSelected: onAddressSelected,
+                nextPage: goToTilfoejRuter),
           ],
         ),
       ),
     );
+  }
+
+  onAddressSelected(GAddress selected) {
+    setState(() {
+      addresses.add(selected);
+    });
+  }
+
+  displayActionButton() {
+    if (shouldShowFloatingActionButton) {
+      Color displayColor = Theme.of(context).highlightColor;
+      Function onPressed = goToTilfoejRuter;
+      return FloatingActionButton.extended(onPressed: onPressed, backgroundColor: displayColor,label: Text(
+        "Næste",
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ));
+    } else {
+      return Container();
+    }
   }
 }

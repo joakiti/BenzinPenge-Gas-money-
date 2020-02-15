@@ -3,6 +3,7 @@ import 'package:benzin_penge/mixin/error_message_mixin.dart';
 import 'package:benzin_penge/model/address.dart';
 import 'package:benzin_penge/pages/tilfoej_ruter.dart';
 import 'package:benzin_penge/ui_components/address_search.dart';
+import 'package:benzin_penge/ui_components/nav_icon.dart';
 import 'package:flutter/material.dart';
 
 class StartRuteOplysninger extends StatefulWidget {
@@ -38,12 +39,8 @@ class _StartRuteOplysningerState extends SearchInterface<StartRuteOplysninger>
       floatingActionButton:
           shouldShowFloatingActionButton && selectedAddress != null
               ? FloatingActionButton(
-                  backgroundColor: selectedAddress != null
-                      ? Theme.of(context).bottomAppBarColor
-                      : Theme.of(context).bottomAppBarColor,
-                  onPressed: selectedAddress != null
-                      ? goToTilfoejRuter
-                      : displayErrorUserDidNotPickAddress,
+                  backgroundColor: Theme.of(context).bottomAppBarColor,
+                  onPressed: goToTilfoejRuter,
                   child: Icon(Icons.navigation))
               : Container(),
       body: SafeArea(
@@ -61,13 +58,12 @@ class _StartRuteOplysningerState extends SearchInterface<StartRuteOplysninger>
                 Text(
                     "Du kan tilføje ekstra udgifter, og opdele betaling senere"),
                 AddressSearch(
-                  endRowWidget: NavigationIcon(),
-                  lookingUpResults: lookingUpResults,
-                  parent: this,
-                  scaffoldKey: scaffoldKey,
-                  onAddressSelected: onAddressSelected,
-                  nextPage: goToTilfoejRuter
-                ),
+                    endRowWidget: NavigationIcon(),
+                    lookingUpResults: lookingUpResults,
+                    parent: this,
+                    scaffoldKey: scaffoldKey,
+                    onAddressSelected: onAddressSelected,
+                    nextPage: goToTilfoejRuter),
               ],
             ),
           ],
@@ -80,29 +76,5 @@ class _StartRuteOplysningerState extends SearchInterface<StartRuteOplysninger>
     setState(() {
       selectedAddress = selected;
     });
-  }
-}
-
-class NavigationIcon extends StatelessWidget {
-  const NavigationIcon({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        decoration: BoxDecoration(
-            color: Theme.of(context).highlightColor,
-            borderRadius:
-                BorderRadius.all(Radius.circular(45.0))),
-        child: Transform.rotate(
-          angle: 1,
-          child: Container(
-            padding: EdgeInsets.all(10),
-              child: Icon(
-            Icons.navigation,
-            color: Colors.white,
-          )),
-        ));
   }
 }
