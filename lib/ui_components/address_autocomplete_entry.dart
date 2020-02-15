@@ -3,11 +3,11 @@ import 'package:benzin_penge/ui_components/address_icon.dart';
 import 'package:flutter/material.dart';
 
 class AddressAutoCompleteEntry extends StatefulWidget {
-
   final GAddress address;
   final Widget buttonEndRow;
+  final Function onPressed;
 
-  AddressAutoCompleteEntry({this.address, this.buttonEndRow});
+  AddressAutoCompleteEntry({this.address, this.buttonEndRow, this.onPressed});
 
   @override
   _AddressAutoCompleteEntryState createState() =>
@@ -33,9 +33,8 @@ class _AddressAutoCompleteEntryState extends State<AddressAutoCompleteEntry> {
                       children: <Widget>[
                         Expanded(child: GAddressIcon(widget.address)),
                         widget.buttonEndRow == null
-                            ? Container(
-                              )
-                            : InkWell(child: widget.buttonEndRow),
+                            ? Container()
+                            : widget.buttonEndRow,
                       ],
                     )))
           ],

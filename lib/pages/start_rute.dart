@@ -66,6 +66,7 @@ class _StartRuteOplysningerState extends SearchInterface<StartRuteOplysninger>
                   parent: this,
                   scaffoldKey: scaffoldKey,
                   onAddressSelected: onAddressSelected,
+                  nextPage: goToTilfoejRuter
                 ),
               ],
             ),

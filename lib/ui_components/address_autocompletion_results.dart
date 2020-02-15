@@ -7,9 +7,14 @@ class AddressAutocompletionResults extends StatelessWidget {
   final List<GAddress> suggestions;
   final Function onTap;
   final Widget endRowWidget;
+  final Function nextPage;
 
   AddressAutocompletionResults(
-      {this.lookingUpResults, this.suggestions, this.onTap, this.endRowWidget});
+      {this.lookingUpResults,
+      this.suggestions,
+      this.onTap,
+      this.endRowWidget,
+      this.nextPage});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +38,14 @@ class AddressAutocompletionResults extends StatelessWidget {
                               onTap: () {
                                 onTap(v);
                               },
-                              child: AddressAutoCompleteEntry(address: v, buttonEndRow: endRowWidget,));
+                              child: AddressAutoCompleteEntry(
+                                  address: v,
+                                  buttonEndRow: GestureDetector(
+                                      onTap: () {
+                                        onTap(v);
+                                        nextPage();
+                                      },
+                                      child: endRowWidget)));
                         }).toList())
                       : Center(
                           child: Text(

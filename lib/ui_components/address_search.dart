@@ -13,13 +13,15 @@ class AddressSearch extends StatefulWidget {
   final Function onAddressSelected;
   final bool lookingUpResults;
   final Widget endRowWidget;
+  final Function nextPage;
 
   AddressSearch(
       {@required this.scaffoldKey,
       @required this.parent,
       @required this.onAddressSelected,
       @required this.lookingUpResults,
-      this.endRowWidget});
+      this.endRowWidget,
+      this.nextPage});
 
   @override
   _AddressSearchState createState() => _AddressSearchState();
@@ -64,7 +66,8 @@ class _AddressSearchState extends State<AddressSearch> {
               endRowWidget: widget.endRowWidget,
               lookingUpResults: widget.parent.lookingUpResults,
               suggestions: _suggestions,
-              onTap: addressSelected),
+              onTap: addressSelected,
+              nextPage: widget.nextPage),
           typing
               ? Container()
               : Padding(
