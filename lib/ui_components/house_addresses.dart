@@ -12,7 +12,7 @@ class StoredAddresses extends StatelessWidget {
     return Stack(
       children: <Widget>[
         HouseIcon(
-          icon: Icons.home,
+          icon: Icons.map,
           iconSize: 70,
           size: 12,
         ),

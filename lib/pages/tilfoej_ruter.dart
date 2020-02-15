@@ -32,7 +32,7 @@ class _TilfoejRuterState extends SearchInterface<TilfoejRuter>
     super.dispose();
   }
 
-  void goToTilfoejRuter() {
+  void goToPrisKvittering() {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -70,18 +70,18 @@ class _TilfoejRuterState extends SearchInterface<TilfoejRuter>
             AddressSearch(
                 endRowWidget: Container(
                     decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Theme.of(context).highlightColor,
                         borderRadius: BorderRadius.all(Radius.circular(45))),
                     child: Icon(
-                      Icons.add_circle,
-                      size: 40,
-                      color: Theme.of(context).highlightColor,
+                      Icons.add,
+                      size: 35,
+                      color: Colors.white,
                     )),
                 lookingUpResults: lookingUpResults,
                 parent: this,
                 scaffoldKey: scaffoldKey,
                 onAddressSelected: onAddressSelected,
-                nextPage: goToTilfoejRuter),
+                nextPage: () {}),
           ],
         ),
       ),
@@ -97,7 +97,7 @@ class _TilfoejRuterState extends SearchInterface<TilfoejRuter>
   displayActionButton() {
     if (shouldShowFloatingActionButton) {
       Color displayColor = Theme.of(context).highlightColor;
-      Function onPressed = goToTilfoejRuter;
+      Function onPressed = goToPrisKvittering;
       return FloatingActionButton(
         onPressed: onPressed,
         child: Icon(Icons.receipt),
