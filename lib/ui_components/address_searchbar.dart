@@ -95,7 +95,7 @@ class _AddressSearchBarState extends State<AddressSearchBar> with ErrorMessage {
 
     context
         .repository<AddressAutoCompleteProvider>()
-        .provide(searchText)
+        .provide(args: searchText)
         .then((addresses) {
       widget.parent.setLookingUpResultsFalse();
       setState(() {

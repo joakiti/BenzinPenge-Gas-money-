@@ -11,9 +11,8 @@ class AddressAutoCompleteProvider implements AsyncProvider<List<GAddress>> {
   String lastSearch;
   Timer t;
 
-  @override
-  Future<List<GAddress>> provide(addressSubstring) async {
-    if (addressSubstring.isEmpty) {
+  Future<List<GAddress>> provide({args}) async {
+    if (args.isEmpty) {
       return List();
     }
 
@@ -26,17 +25,17 @@ class AddressAutoCompleteProvider implements AsyncProvider<List<GAddress>> {
 
     if (prefs.containsKey(sessionTokenKey) &&
             lastSearch != null &&
-            (addressSubstring.toString().startsWith(lastSearch)) ||
-        (lastSearch.toString().startsWith(addressSubstring))) {
+            (args.toString().startsWith(lastSearch)) ||
+        (lastSearch.toString().startsWith(args))) {
       /**
        * If the user is deleting, we dont auto complete.
        */
       sessionToken = prefs.get(sessionTokenKey);
-      lastSearch = addressSubstring;
+      lastSearch = args;
     } else {
       sessionToken = Uuid().generateV4();
       prefs.setString(sessionTokenKey, sessionToken);
-      lastSearch = addressSubstring;
+      lastSearch = args;
     }
 
     String baseUrl =
@@ -44,7 +43,7 @@ class AddressAutoCompleteProvider implements AsyncProvider<List<GAddress>> {
     String language = 'da';
     String types = '';
     String request =
-        '$baseUrl?input=$addressSubstring&key=$PLACES_API_KEY&language=$language&types=$types&components=country:dk&sessiontoken=$sessionToken';
+        '$baseUrl?input=$args&key=$PLACES_API_KEY&language=$language&types=$types&components=country:dk&sessiontoken=$sessionToken';
 
     Response response = await Dio().get(request);
 

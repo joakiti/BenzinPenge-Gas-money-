@@ -92,8 +92,8 @@ class MyApp extends StatelessWidget {
                       description: "asdf,",
                       placeId:
                       "Eh5EaWVzZWx2ZWosIEvDuGJlbmhhdm4sIERhbm1hcmsiLiosChQKEgnF7iEefVNSRhHjyLdOgUkwBxIUChIJse35PnlUUkYRqLw2nyZVnz4");
-                  //return PrisKvittering(directionPoints: [origin, destination, origin]);
-                  return StartRuteOplysninger();
+                  return PrisKvittering(directionPoints: [origin, destination, origin]);
+                  //return StartRuteOplysninger();
                 }
                 if (snapshot.hasData && !snapshot.data) {
                   return BehovForOplysninger();

@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 
 class DistanceProvider implements AsyncProvider {
   @override
-  Future<AddressDistance> provide(args) async {
+  Future<AddressDistance> provide({args}) async {
     GAddress origin = args[0];
     GAddress destination = args[1];
 
