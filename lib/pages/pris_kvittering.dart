@@ -17,11 +17,8 @@ class PrisKvittering extends StatefulWidget {
 }
 
 class _PrisKvitteringState extends State<PrisKvittering> {
-
-
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -57,26 +54,28 @@ class _PrisKvitteringState extends State<PrisKvittering> {
     );
   }
 
-  Padding buildReceiptIcon(BuildContext context) {
-    return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Align(
-              alignment: Alignment.topCenter,
+  Widget buildReceiptIcon(BuildContext context) {
+    return Positioned(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: Container(
+              decoration: BoxDecoration(
+                  border:
+                      Border.all(width: 5, color: Theme.of(context).cardColor),
+                  borderRadius: BorderRadius.all(Radius.circular(45)),
+                  color: Theme.of(context).highlightColor),
               child: Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                          width: 5, color: Theme.of(context).cardColor),
-                      borderRadius: BorderRadius.all(Radius.circular(45)),
-                      color: Theme.of(context).highlightColor),
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                      child: Icon(
-                        Icons.receipt,
-                        size: 45,
-                        color: Theme.of(context).cardColor,
-                      ))),
-            ),
-          );
+                  padding: EdgeInsets.all(10),
+                  child: Icon(
+                    Icons.receipt,
+                    size: 45,
+                    color: Theme.of(context).cardColor,
+                  ))),
+        ),
+      ),
+    );
   }
 
   List<Widget> buildHeader() {
@@ -141,21 +140,25 @@ class _PrisKvitteringState extends State<PrisKvittering> {
   Future<Widget> buildListTiles(List<GAddress> directionPoints) async {
     List<Widget> listTiles = new List();
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    double gasolinePrice = await context.repository<GasolinePricesProvider>().provide("");
+    double gasolinePrice =
+        await context.repository<GasolinePricesProvider>().provide("");
     for (int i = 0; i < directionPoints.length; i++) {
       String title = directionPoints[i].description.split(",")[0];
+      GAddress address = directionPoints[i];
       if (i == 0) {
-        listTiles.add(createListTileFromAddressDescription(title, Icons.home));
+        listTiles.add(createListTileFromAddressDescription(title, Icons.home,
+            distance: null));
       } else if (i != directionPoints.length) {
-        GAddress firstAddress = directionPoints[i];
         GAddress secondAddress = directionPoints[i - 1];
         AddressDistance dist = await context
             .repository<DistanceProvider>()
-            .provide([firstAddress, secondAddress]);
+            .provide([address, secondAddress]);
         double literAntal = num.parse(
             ((dist.distance / 1000) / prefs.getInt("km/l")).toStringAsFixed(2));
         int price = (gasolinePrice * literAntal).toInt();
-        listTiles.add(createListTileFromAddressDescription(title, i != directionPoints.length-1 ? Icons.more_vert : Icons.home,
+        IconData icon =
+            i != directionPoints.length - 1 ? Icons.more_vert : Icons.home;
+        listTiles.add(createListTileFromAddressDescription(title, icon,
             distance: dist.distanceText, priceForDistance: price));
       }
     }
@@ -165,19 +168,25 @@ class _PrisKvitteringState extends State<PrisKvittering> {
   }
 
   Widget createListTileFromAddressDescription(String title, IconData icon,
-      {String distance, int priceForDistance}) {
+      {String distance, int priceForDistance, GAddress address}) {
+    String milesAway = "Du starter her";
+    if (distance != null) {
+      milesAway = "$distance kilometer væk";
+    }
+    String priceForDistanceToString = "";
+    if (priceForDistance != null) {
+      priceForDistanceToString = "$priceForDistance,-";
+    }
     return ListTile(
-        leading: Icon(icon, color: Theme.of(context).highlightColor,),
-        subtitle: distance == null
-            ? Text("Dit start punkt")
-            : Text("$distance kilometer væk",
-                style: Theme.of(context).textTheme.display3),
-        trailing: priceForDistance == null
-            ? Text("")
-            : Text(
-                "$priceForDistance,-",
-                style: Theme.of(context).textTheme.display4,
-              ),
+        leading: Icon(
+          icon,
+          color: Theme.of(context).highlightColor,
+        ),
+        subtitle: Text(milesAway, style: Theme.of(context).textTheme.display3),
+        trailing: Text(
+          priceForDistanceToString,
+          style: Theme.of(context).textTheme.display4,
+        ),
         enabled: true,
         onTap: () {},
         title: Text(title, style: Theme.of(context).textTheme.body2),

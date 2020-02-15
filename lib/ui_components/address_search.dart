@@ -43,7 +43,6 @@ class _AddressSearchState extends State<AddressSearch> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _searchController.dispose();
     _keyboardFocus.removeListener(dontDisplayButtonContentOnKeyboard);
     super.dispose();
@@ -62,12 +61,18 @@ class _AddressSearchState extends State<AddressSearch> {
             onStartSearch: widget.parent.setLookingUpResultsTrue,
             onAddressReceived: onAddressesReceived,
           ),
-          AddressAutocompletionResults(
-              endRowWidget: widget.endRowWidget,
-              lookingUpResults: widget.parent.lookingUpResults,
-              suggestions: _suggestions,
-              onTap: addressSelected,
-              nextPage: widget.nextPage),
+          NotificationListener<ScrollUpdateNotification>(
+            onNotification: (notification) {
+              _keyboardFocus.unfocus();
+              return true;
+            },
+            child: AddressAutocompletionResults(
+                endRowWidget: widget.endRowWidget,
+                lookingUpResults: widget.parent.lookingUpResults,
+                suggestions: _suggestions,
+                onTap: addressSelected,
+                nextPage: widget.nextPage),
+          ),
           typing
               ? Container()
               : Padding(
