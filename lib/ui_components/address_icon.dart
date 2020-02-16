@@ -22,7 +22,7 @@ class _GAddressIconState extends State<GAddressIcon> {
 
   @override
   Widget build(BuildContext context) {
-    IconData iconData = mapAddressTypeToIcon(widget.address.types);
+    IconData iconData = GAddress.mapAddressTypeToIcon(widget.address.types);
     return Row(
       children: <Widget>[
         Container(
@@ -43,11 +43,13 @@ class _GAddressIconState extends State<GAddressIcon> {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 12.0),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: createTextColumn()),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 12.0),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: createTextColumn()),
+          ),
         ),
       ],
     );
@@ -62,7 +64,7 @@ class _GAddressIconState extends State<GAddressIcon> {
         return MapEntry(
             index,
             Text(
-              val + "",
+              val + "sjdfoijsdoifjsdiofjiosdjfiojsdoij",
               style: TextStyle(
                   color: Theme.of(context)
                       .secondaryHeaderColor,
@@ -74,30 +76,5 @@ class _GAddressIconState extends State<GAddressIcon> {
     })
         .values
         .toList();
-  }
-
-  IconData mapAddressTypeToIcon(List<String> types) {
-    if (types.contains("store")) {
-      return Icons.store;
-    }
-    if (types.contains("school")) {
-      return Icons.school;
-    }
-    if (types.contains("route")) {
-      setState(() {
-        fontAwesomeIconUsed = true;
-      });
-      return FontAwesomeIcons.road;
-    }
-    if (types.contains("establishment")) {
-      return Icons.business;
-    }
-    if (types.contains("political")) {
-      return Icons.location_city;
-    }
-    if (types.contains("street_address")) {
-      return Icons.home;
-    }
-    return Icons.location_on;
   }
 }

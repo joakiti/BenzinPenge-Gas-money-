@@ -1,3 +1,4 @@
+import 'package:benzin_penge/mixin/error_message_mixin.dart';
 import 'package:benzin_penge/model/address.dart';
 import 'package:benzin_penge/model/address_distance.dart';
 import 'package:benzin_penge/repositories/implementations/distance_provider.dart';
@@ -16,7 +17,7 @@ class PrisKvittering extends StatefulWidget {
   _PrisKvitteringState createState() => _PrisKvitteringState();
 }
 
-class _PrisKvitteringState extends State<PrisKvittering> {
+class _PrisKvitteringState extends State<PrisKvittering> with ErrorMessage {
   List<AddressDistance> addresses = [];
 
   @override
@@ -38,11 +39,17 @@ class _PrisKvitteringState extends State<PrisKvittering> {
                   buildHeader(),
                   FutureBuilder(
                     future: seedAddressDistance(widget.directionPoints),
-                    builder: (context, snapshot) {
+                    builder: (context, AsyncSnapshot<List<AddressDistance>> snapshot) {
                       if (snapshot.hasData) {
                         addresses = snapshot.data;
-                        return buildAddresses();
-                      } else {
+                        return Column(
+                          children: snapshot.data.map(createListTileFromAddressDescription).toList(),
+                        );
+                      } else if (snapshot.hasError) {
+                        //showSnackBarError(error_scaffoldKey, "Vi kunne ikke fremsøge din kvittering lige nu. Prøv igen senere");
+                       return Container();
+                      }
+                      else {
                         return Center(
                           child: CircularProgressIndicator(),
                         );
@@ -120,17 +127,19 @@ class _PrisKvitteringState extends State<PrisKvittering> {
   }
 
   /// Returns true if addresses could be fetched with no errors
-  Future<List<AddressDistance>> seedAddressDistance(List<GAddress> directionPoints) async {
+  Future<List<AddressDistance>> seedAddressDistance(
+      List<GAddress> directionPoints) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     double gasolinePrice =
         await context.repository<GasolinePricesProvider>().provide();
     int kmPerLiter = prefs.getInt("km/l");
 
     List<AddressDistance> result = [];
-    result.add(AddressDistance(
-        distanceText: "0 km",
-        from: directionPoints[0],
-        to: directionPoints[0]));
+    AddressDistance startingPoint = AddressDistance(
+        distanceText: "0 km", from: directionPoints[0], to: directionPoints[0]);
+    startingPoint.priceOfDistanceInGas = 0;
+    startingPoint.icon = GAddress.mapAddressTypeToIcon(directionPoints[0].types);
+    result.add(startingPoint);
 
     for (int i = 0; i < directionPoints.length - 1; i++) {
       GAddress from = directionPoints[i];
@@ -149,23 +158,24 @@ class _PrisKvitteringState extends State<PrisKvittering> {
     dist.literUsed =
         num.parse(((dist.distance / 1000) / kmPerLiter).toStringAsFixed(2));
     dist.priceOfDistanceInGas = (gasolinePrice * dist.literUsed).toInt();
+    dist.icon = GAddress.mapAddressTypeToIcon(to.types);
     return dist;
   }
 
   Widget createListTileFromAddressDescription(AddressDistance address) {
-    String priceForDistanceToString = "";
-    if (address.priceOfDistanceInGas != null) {
-      priceForDistanceToString = "${address.priceOfDistanceInGas},-";
+    String gasDisplay = "${address.priceOfDistanceInGas},-";
+    if (address.priceOfDistanceInGas == 0) {
+      gasDisplay = "";
     }
     return ListTile(
         leading: Icon(
-          Icons.ac_unit,
+          address.icon,
           color: Theme.of(context).highlightColor,
         ),
         subtitle: Text("${address.distanceText} væk",
             style: Theme.of(context).textTheme.display3),
         trailing: Text(
-          priceForDistanceToString,
+          gasDisplay,
           style: Theme.of(context).textTheme.display4,
         ),
         enabled: true,
@@ -178,7 +188,9 @@ class _PrisKvitteringState extends State<PrisKvittering> {
   buildAddresses() {
     List<Widget> children = [];
     for (int i = 0; i < addresses.length; i++) {
-      children.add(createListTileFromAddressDescription(addresses[i]));
+      children.add(
+          createListTileFromAddressDescription(addresses[i])
+      );
     }
     return Column(
       children: children,

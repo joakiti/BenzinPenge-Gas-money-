@@ -1,7 +1,10 @@
 import 'package:benzin_penge/model/address.dart';
 import 'package:copyable/copyable.dart';
+import 'package:flutter/material.dart';
 
 class AddressDistance implements Copyable<AddressDistance> {
+
+  IconData icon;
   int distance;
   int durationNoTraffic;
   int durationWithTraffic;

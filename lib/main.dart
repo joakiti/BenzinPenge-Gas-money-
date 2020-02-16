@@ -90,10 +90,11 @@ class MyApp extends StatelessWidget {
                       "EiVGYWxrb25lciBBbGxlLCBGcmVkZXJpa3NiZXJnLCBEYW5tYXJrIi4qLAoUChIJGcoa3LpTUkYRJ-L6RKWKo3ISFAoSCaFXG8FSUlJGESeCH2l2ndG0");
                   GAddress destination = GAddress(
                       description: "asdf,",
+                      types: [],
                       placeId:
                       "Eh5EaWVzZWx2ZWosIEvDuGJlbmhhdm4sIERhbm1hcmsiLiosChQKEgnF7iEefVNSRhHjyLdOgUkwBxIUChIJse35PnlUUkYRqLw2nyZVnz4");
-                  return PrisKvittering(directionPoints: [origin, destination, origin]);
-                  //return StartRuteOplysninger();
+                  //return PrisKvittering(directionPoints: [origin, destination, origin]);
+                  return StartRuteOplysninger();
                 }
                 if (snapshot.hasData && !snapshot.data) {
                   return BehovForOplysninger();
