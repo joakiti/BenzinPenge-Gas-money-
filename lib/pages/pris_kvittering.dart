@@ -5,6 +5,7 @@ import 'package:benzin_penge/repositories/implementations/distance_provider.dart
 import 'package:benzin_penge/repositories/implementations/gasoline_price_provider.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,16 +19,50 @@ class PrisKvittering extends StatefulWidget {
 }
 
 class _PrisKvitteringState extends State<PrisKvittering> with ErrorMessage {
-  List<AddressDistance> addresses = [];
+  Future<List<AddressDistance>> addressDistanceFuture;
+
+  /// Read values from this List<AddressDistance>
+  List<AddressDistance> addressesDistanceFetched;
 
   @override
   void initState() {
+    addressDistanceFuture = seedAddressDistance(widget.directionPoints);
+    addressDistanceFuture.then((v) {
+      addressesDistanceFetched = v;
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(right: 25.0),
+        child: Container(
+            decoration: BoxDecoration(
+                border: Border.all(
+                    color: Theme.of(context).highlightColor, width: 3),
+                borderRadius: BorderRadius.all(Radius.circular(45))),
+            child: FloatingActionButton(
+              child: Icon(
+                Icons.person_add,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) => Dialog(
+                          child: Column(
+                            children: <Widget>[
+                              Expanded(child: Text("test")),
+                            ],
+                          ),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                        ));
+              },
+            )),
+      ),
       body: SafeArea(
         child: Stack(
           children: <Widget>[
@@ -38,25 +73,31 @@ class _PrisKvitteringState extends State<PrisKvittering> with ErrorMessage {
                 child: ListView(children: [
                   buildHeader(),
                   FutureBuilder(
-                    future: seedAddressDistance(widget.directionPoints),
-                    builder: (context, AsyncSnapshot<List<AddressDistance>> snapshot) {
-                      if (snapshot.hasData) {
-                        addresses = snapshot.data;
+                    future: addressDistanceFuture,
+                    builder: (context,
+                        AsyncSnapshot<List<AddressDistance>> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
                         return Column(
-                          children: snapshot.data.map(createListTileFromAddressDescription).toList(),
+                          children: snapshot.data
+                              .map(createListTileFromAddressDescription)
+                              .toList(),
                         );
+                        /**
+                         * We must wait for the view to be loaded, before we display a snack bar
+                         */
                       } else if (snapshot.hasError) {
-                        //showSnackBarError(error_scaffoldKey, "Vi kunne ikke fremsøge din kvittering lige nu. Prøv igen senere");
-                       return Container();
-                      }
-                      else {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          showSnackBarErrorWithContext(context,
+                              "Fejl under indlæsning af oplysninger\n ${snapshot.error.toString()}");
+                        });
+                        return Container();
+                      } else {
                         return Center(
                           child: CircularProgressIndicator(),
                         );
                       }
                     },
                   ),
-                  buildAddresses()
                 ]),
               ),
             ),
@@ -138,7 +179,8 @@ class _PrisKvitteringState extends State<PrisKvittering> with ErrorMessage {
     AddressDistance startingPoint = AddressDistance(
         distanceText: "0 km", from: directionPoints[0], to: directionPoints[0]);
     startingPoint.priceOfDistanceInGas = 0;
-    startingPoint.icon = GAddress.mapAddressTypeToIcon(directionPoints[0].types);
+    startingPoint.icon =
+        GAddress.mapAddressTypeToIcon(directionPoints[0].types);
     result.add(startingPoint);
 
     for (int i = 0; i < directionPoints.length - 1; i++) {
@@ -183,18 +225,6 @@ class _PrisKvitteringState extends State<PrisKvittering> with ErrorMessage {
         title: Text(address.to.description.split(",")[0],
             style: Theme.of(context).textTheme.body2),
         dense: true);
-  }
-
-  buildAddresses() {
-    List<Widget> children = [];
-    for (int i = 0; i < addresses.length; i++) {
-      children.add(
-          createListTileFromAddressDescription(addresses[i])
-      );
-    }
-    return Column(
-      children: children,
-    );
   }
 }
 

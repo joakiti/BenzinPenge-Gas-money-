@@ -5,6 +5,8 @@ import 'package:benzin_penge/pages/tilfoej_ruter.dart';
 import 'package:benzin_penge/repositories/implementations/address_autocomplete_provider.dart';
 import 'package:benzin_penge/repositories/implementations/distance_provider.dart';
 import 'package:benzin_penge/repositories/implementations/gasoline_price_provider.dart';
+import 'package:benzin_penge/repositories/implementations/user_images_provider.dart';
+import 'package:benzin_penge/ui_components/user_icon_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,12 +21,16 @@ class MyApp extends StatelessWidget {
     return prefs.containsKey("km/l");
   }
 
-  AddressAutoCompleteProvider autoCompleteProvider = AddressAutoCompleteProvider();
+  AddressAutoCompleteProvider autoCompleteProvider =
+      AddressAutoCompleteProvider();
 
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
+        RepositoryProvider<UserImagesProvider>(
+          create: (context) => UserImagesProvider(),
+        ),
         RepositoryProvider<AddressAutoCompleteProvider>(
             create: (context) => autoCompleteProvider),
         RepositoryProvider<DistanceProvider>(
@@ -38,6 +44,9 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.blue,
             highlightColor: Colors.indigoAccent,
             scaffoldBackgroundColor: Color(0xFF1D1D1D),
+            primaryIconTheme: IconThemeData(
+              color: Color(0xFFFFDED5),
+            ),
             bottomAppBarColor: Color(0xFF7cb342),
             backgroundColor: Color(0xFF1D1D1D),
             accentColor: Color(0xFF303030),
@@ -87,14 +96,15 @@ class MyApp extends StatelessWidget {
                   GAddress origin = GAddress(
                       description: "hello,",
                       placeId:
-                      "EiVGYWxrb25lciBBbGxlLCBGcmVkZXJpa3NiZXJnLCBEYW5tYXJrIi4qLAoUChIJGcoa3LpTUkYRJ-L6RKWKo3ISFAoSCaFXG8FSUlJGESeCH2l2ndG0");
+                          "EiVGYWxrb25lciBBbGxlLCBGcmVkZXJpa3NiZXJnLCBEYW5tYXJrIi4qLAoUChIJGcoa3LpTUkYRJ-L6RKWKo3ISFAoSCaFXG8FSUlJGESeCH2l2ndG0");
                   GAddress destination = GAddress(
                       description: "asdf,",
                       types: [],
                       placeId:
-                      "Eh5EaWVzZWx2ZWosIEvDuGJlbmhhdm4sIERhbm1hcmsiLiosChQKEgnF7iEefVNSRhHjyLdOgUkwBxIUChIJse35PnlUUkYRqLw2nyZVnz4");
+                          "Eh5EaWVzZWx2ZWosIEvDuGJlbmhhdm4sIERhbm1hcmsiLiosChQKEgnF7iEefVNSRhHjyLdOgUkwBxIUChIJse35PnlUUkYRqLw2nyZVnz4");
                   //return PrisKvittering(directionPoints: [origin, destination, origin]);
-                  return StartRuteOplysninger();
+                  //return StartRuteOplysninger();
+                  return UserIconPicker();
                 }
                 if (snapshot.hasData && !snapshot.data) {
                   return BehovForOplysninger();

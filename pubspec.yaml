@@ -29,6 +29,7 @@ dependencies:
   geocoder: ^0.2.1
   font_awesome_flutter: ^8.5.0
   copyable: ^0.0.1+2
+  provider: ^4.0.4
   geolocator: ^5.1.4+2
   google_maps_webservice: ^0.0.16
   place_picker: ^0.9.11
@@ -55,6 +56,8 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

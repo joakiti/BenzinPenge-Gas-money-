@@ -47,7 +47,7 @@ class _GAddressIconState extends State<GAddressIcon> {
           child: Padding(
             padding: const EdgeInsets.only(left: 12.0),
             child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: createTextColumn()),
           ),
         ),
@@ -64,7 +64,7 @@ class _GAddressIconState extends State<GAddressIcon> {
         return MapEntry(
             index,
             Text(
-              val + "sjdfoijsdoifjsdiofjiosdjfiojsdoij",
+              val ,
               style: TextStyle(
                   color: Theme.of(context)
                       .secondaryHeaderColor,

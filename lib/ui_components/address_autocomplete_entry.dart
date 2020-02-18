@@ -31,7 +31,8 @@ class _AddressAutoCompleteEntryState extends State<AddressAutoCompleteEntry> {
                     margin: EdgeInsets.all(10),
                     child: Row(
                       children: <Widget>[
-                        Expanded(child: GAddressIcon(widget.address)),
+                        Expanded(
+                            child: GAddressIcon(widget.address)),
                         widget.buttonEndRow == null
                             ? Container()
                             : widget.buttonEndRow,
