@@ -31,7 +31,7 @@ class StoredAddresses extends StatelessWidget {
                       child: Center(
                           child: Text(
                     "$noStored",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: Theme.of(context).scaffoldBackgroundColor),
                   )))),
             ),
           ),

@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
           title: 'Flutter Demo',
           theme: ThemeData(
             primarySwatch: Colors.blue,
-            highlightColor: Colors.indigoAccent,
+            highlightColor: Color(0xFFFFDCA2),
             scaffoldBackgroundColor: Color(0xFF1D1D1D),
             primaryIconTheme: IconThemeData(
               color: Color(0xFFFFDED5),
@@ -103,8 +103,8 @@ class MyApp extends StatelessWidget {
                       placeId:
                           "Eh5EaWVzZWx2ZWosIEvDuGJlbmhhdm4sIERhbm1hcmsiLiosChQKEgnF7iEefVNSRhHjyLdOgUkwBxIUChIJse35PnlUUkYRqLw2nyZVnz4");
                   //return PrisKvittering(directionPoints: [origin, destination, origin]);
-                  //return StartRuteOplysninger();
-                  return UserIconPicker();
+                  return StartRuteOplysninger();
+                  //return UserIconPicker();
                 }
                 if (snapshot.hasData && !snapshot.data) {
                   return BehovForOplysninger();

@@ -19,7 +19,7 @@ class UserImagesProvider {
     CROCODILE: "Krokodille",
     EARTH: "Jorden",
     FISH: "Fisk",
-    KANGAROO: "Sommer kænguru",
+    KANGAROO: "Cooluru",
     KANGAROO_REGULAR: "Kænguru",
     KOALA: "Koala",
     MAN: "Mand",
@@ -29,15 +29,42 @@ class UserImagesProvider {
 
   UserImagesProvider() {
     images = {
-      CROCODILE: Image.asset("$RESOURCE_PATH$CROCODILE"),
-      EARTH: Image.asset("$RESOURCE_PATH$EARTH"),
-      FISH: Image.asset("$RESOURCE_PATH$FISH"),
-      KANGAROO: Image.asset("$RESOURCE_PATH$KANGAROO"),
-      KANGAROO_REGULAR: Image.asset("$RESOURCE_PATH$KANGAROO_REGULAR"),
-      KOALA: Image.asset("$RESOURCE_PATH$KOALA"),
-      MAN: Image.asset("$RESOURCE_PATH$MAN"),
-      PARROT: Image.asset("$RESOURCE_PATH$PARROT"),
-      WOMAN: Image.asset("$RESOURCE_PATH$WOMAN")
+      CROCODILE: Image.asset(
+        "$RESOURCE_PATH$CROCODILE",
+        semanticLabel: imageToIconName[CROCODILE],
+      ),
+      EARTH: Image.asset(
+        "$RESOURCE_PATH$EARTH",
+        semanticLabel: imageToIconName[EARTH],
+      ),
+      FISH: Image.asset(
+        "$RESOURCE_PATH$FISH",
+        semanticLabel: imageToIconName[FISH],
+      ),
+      KANGAROO: Image.asset(
+        "$RESOURCE_PATH$KANGAROO",
+        semanticLabel: imageToIconName[KANGAROO],
+      ),
+      KANGAROO_REGULAR: Image.asset(
+        "$RESOURCE_PATH$KANGAROO_REGULAR",
+        semanticLabel: imageToIconName[KANGAROO_REGULAR],
+      ),
+      KOALA: Image.asset(
+        "$RESOURCE_PATH$KOALA",
+        semanticLabel: imageToIconName[KOALA],
+      ),
+      MAN: Image.asset(
+        "$RESOURCE_PATH$MAN",
+        semanticLabel: imageToIconName[MAN],
+      ),
+      PARROT: Image.asset(
+        "$RESOURCE_PATH$PARROT",
+        semanticLabel: imageToIconName[PARROT],
+      ),
+      WOMAN: Image.asset(
+        "$RESOURCE_PATH$WOMAN",
+        semanticLabel: imageToIconName[WOMAN],
+      )
     };
   }
 

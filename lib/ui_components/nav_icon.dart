@@ -21,7 +21,7 @@ class NavigationIcon extends StatelessWidget {
               padding: EdgeInsets.all(10),
               child: Icon(
                 Icons.navigation,
-                color: Colors.white,
+                color: Theme.of(context).scaffoldBackgroundColor,
               )),
         ));
   }

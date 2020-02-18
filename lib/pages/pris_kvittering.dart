@@ -3,6 +3,7 @@ import 'package:benzin_penge/model/address.dart';
 import 'package:benzin_penge/model/address_distance.dart';
 import 'package:benzin_penge/repositories/implementations/distance_provider.dart';
 import 'package:benzin_penge/repositories/implementations/gasoline_price_provider.dart';
+import 'package:benzin_penge/ui_components/user_icon_picker.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -50,16 +51,7 @@ class _PrisKvitteringState extends State<PrisKvittering> with ErrorMessage {
               ),
               onPressed: () {
                 showDialog(
-                    context: context,
-                    builder: (context) => Dialog(
-                          child: Column(
-                            children: <Widget>[
-                              Expanded(child: Text("test")),
-                            ],
-                          ),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                        ));
+                    context: context, builder: (context) => UserIconPicker());
               },
             )),
       ),
@@ -241,8 +233,8 @@ class ReceiptIcon extends StatelessWidget {
         alignment: Alignment.topCenter,
         child: Container(
             decoration: BoxDecoration(
-                border:
-                    Border.all(width: 5, color: Theme.of(context).cardColor),
+                border: Border.all(
+                    width: 5, color: Theme.of(context).scaffoldBackgroundColor),
                 borderRadius: BorderRadius.all(Radius.circular(45)),
                 color: Theme.of(context).highlightColor),
             child: Container(
@@ -250,7 +242,7 @@ class ReceiptIcon extends StatelessWidget {
                 child: Icon(
                   Icons.receipt,
                   size: 45,
-                  color: Theme.of(context).cardColor,
+                  color: Theme.of(context).scaffoldBackgroundColor,
                 ))),
       ),
     );

@@ -75,7 +75,7 @@ class _TilfoejRuterState extends SearchInterface<TilfoejRuter>
                     child: Icon(
                       Icons.add,
                       size: 35,
-                      color: Colors.white,
+                      color: Theme.of(context).backgroundColor,
                     )),
                 lookingUpResults: lookingUpResults,
                 parent: this,
@@ -100,7 +100,7 @@ class _TilfoejRuterState extends SearchInterface<TilfoejRuter>
       Function onPressed = goToPrisKvittering;
       return FloatingActionButton(
         onPressed: onPressed,
-        child: Icon(Icons.receipt),
+        child: Icon(Icons.receipt, color: Theme.of(context).scaffoldBackgroundColor),
         backgroundColor: displayColor,
       );
     } else {
