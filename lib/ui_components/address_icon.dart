@@ -1,28 +1,18 @@
 import 'package:benzin_penge/model/address.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class GAddressIcon extends StatefulWidget {
-  GAddress address;
-  double size;
-  var color;
 
-  GAddressIcon(this.address, {this.size = 20, this.color});
-
-  @override
-  _GAddressIconState createState() => _GAddressIconState(size);
-}
-
-class _GAddressIconState extends State<GAddressIcon> {
+class GAddressIcon extends StatelessWidget {
 
   double size;
   bool fontAwesomeIconUsed = false;
+  GAddress address;
 
-  _GAddressIconState(this.size);
+  GAddressIcon(this.address, {this.size});
 
   @override
   Widget build(BuildContext context) {
-    IconData iconData = GAddress.mapAddressTypeToIcon(widget.address.types);
+    IconData iconData = GAddress.mapAddressTypeToIcon(address.types);
     return Row(
       children: <Widget>[
         Container(
@@ -35,7 +25,7 @@ class _GAddressIconState extends State<GAddressIcon> {
               child: Text(
                 String.fromCharCode(iconData.codePoint),
                 style: TextStyle(
-                  color: Theme.of(context).accentColor,
+                    color: Theme.of(context).accentColor,
                     fontSize: fontAwesomeIconUsed ? size*0.9 : size,
                     fontFamily: iconData.fontFamily,
                     package: iconData.fontPackage),
@@ -48,15 +38,15 @@ class _GAddressIconState extends State<GAddressIcon> {
             padding: const EdgeInsets.only(left: 12.0),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: createTextColumn()),
+                children: createTextColumn(context)),
           ),
         ),
       ],
     );
   }
 
-  List<Widget> createTextColumn() {
-    return widget.address.description
+  List<Widget> createTextColumn(BuildContext context) {
+    return address.description
         .split(", ")
         .asMap()
         .map((index, val) {
@@ -78,3 +68,4 @@ class _GAddressIconState extends State<GAddressIcon> {
         .toList();
   }
 }
+

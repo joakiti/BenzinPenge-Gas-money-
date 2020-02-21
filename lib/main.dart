@@ -66,9 +66,9 @@ class MyApp extends StatelessWidget {
               display1: TextStyle(
                   fontSize: 14.0, fontFamily: 'Hind', color: Colors.white),
               display2: TextStyle(
-                  fontSize: 14.0, fontFamily: 'Hind', color: Colors.white),
+                  fontSize: 12.0, fontFamily: 'Hind', color: Colors.grey),
               display3: TextStyle(
-                  fontSize: 12.0, fontFamily: 'Hind', color: Colors.black38),
+                  fontSize: 12.0, fontFamily: 'Hind', color: Theme.of(context).primaryIconTheme.color),
               display4: TextStyle(
                   fontSize: 25.0,
                   fontFamily: 'Hind',
@@ -102,8 +102,8 @@ class MyApp extends StatelessWidget {
                       types: [],
                       placeId:
                           "Eh5EaWVzZWx2ZWosIEvDuGJlbmhhdm4sIERhbm1hcmsiLiosChQKEgnF7iEefVNSRhHjyLdOgUkwBxIUChIJse35PnlUUkYRqLw2nyZVnz4");
-                  //return PrisKvittering(directionPoints: [origin, destination, origin]);
-                  return StartRuteOplysninger();
+                  return PrisKvittering(directionPoints: [origin, destination, origin]);
+                  //return StartRuteOplysninger();
                   //return UserIconPicker();
                 }
                 if (snapshot.hasData && !snapshot.data) {

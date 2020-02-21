@@ -4,7 +4,6 @@ import 'package:benzin_penge/model/address.dart';
 import 'package:benzin_penge/pages/pris_kvittering.dart';
 import 'package:benzin_penge/ui_components/address_search.dart';
 import 'package:benzin_penge/ui_components/house_addresses.dart';
-import 'package:benzin_penge/ui_components/nav_icon.dart';
 import 'package:flutter/material.dart';
 
 class TilfoejRuter extends StatefulWidget {

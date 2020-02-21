@@ -3,10 +3,13 @@ import 'package:benzin_penge/model/address.dart';
 import 'package:benzin_penge/model/address_distance.dart';
 import 'package:benzin_penge/repositories/implementations/distance_provider.dart';
 import 'package:benzin_penge/repositories/implementations/gasoline_price_provider.dart';
+import 'package:benzin_penge/ui_components/address_autocomplete_entry.dart';
+import 'package:benzin_penge/ui_components/address_icon.dart';
 import 'package:benzin_penge/ui_components/user_icon_picker.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -90,6 +93,75 @@ class _PrisKvitteringState extends State<PrisKvittering> with ErrorMessage {
                       }
                     },
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 38.0),
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "Status",
+                            textAlign: TextAlign.start,
+                            style: Theme.of(context).textTheme.display4,
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          FutureBuilder(
+                              future: addressDistanceFuture,
+                              builder: (context,
+                                  AsyncSnapshot<List<AddressDistance>>
+                                      snapshot) {
+                                if (snapshot.hasData &&
+                                    snapshot.connectionState ==
+                                        ConnectionState.done) {
+                                  return Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      PriceTile(
+                                          description: "Pris pr. liter",
+                                          icon: Icons.local_gas_station,
+                                          price:
+                                              "${addressesDistanceFetched.fold(0, (s, v) => s + v.priceOfDistanceInGas).toString()}kr/liter",
+                                          color:
+                                              Theme.of(context).highlightColor),
+                                      PriceTile(
+                                          description: "Total pris",
+                                          icon: Icons.monetization_on,
+                                          price: addressesDistanceFetched
+                                              .fold(
+                                                  0,
+                                                  (s, v) =>
+                                                      s +
+                                                      v.priceOfDistanceInGas)
+                                              .toString(),
+                                          color: Colors.redAccent),
+                                      PriceTile(
+                                          description: "Test",
+                                          icon: Icons.local_gas_station,
+                                          price: addressesDistanceFetched
+                                              .fold(
+                                                  0,
+                                                  (s, v) =>
+                                                      s +
+                                                      v.priceOfDistanceInGas)
+                                              .toString(),
+                                          color: Colors.indigoAccent),
+                                      SizedBox(
+                                        width: 40,
+                                      )
+                                    ],
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              }),
+                        ],
+                      ),
+                    ),
+                  )
                 ]),
               ),
             ),
@@ -114,7 +186,7 @@ class _PrisKvitteringState extends State<PrisKvittering> with ErrorMessage {
         padding: const EdgeInsets.only(left: 8, right: 8, bottom: 14),
         child: Text(
           "Du kan også tilføje andre udgifter, som broafgift, eller kørselspenge",
-          style: Theme.of(context).textTheme.display3,
+          style: Theme.of(context).textTheme.display2,
           textAlign: TextAlign.center,
         ),
       ),
@@ -201,22 +273,71 @@ class _PrisKvitteringState extends State<PrisKvittering> with ErrorMessage {
     if (address.priceOfDistanceInGas == 0) {
       gasDisplay = "";
     }
-    return ListTile(
-        leading: Icon(
-          address.icon,
-          color: Theme.of(context).highlightColor,
+
+    return Column(
+      children: <Widget>[
+        AddressAutoCompleteEntry(
+          address: address.to,
+          buttonEndRow: Column(
+            children: <Widget>[
+              Text(
+                gasDisplay,
+                style: Theme.of(context)
+                    .textTheme
+                    .display4
+                    .merge(TextStyle(color: Theme.of(context).cardColor)),
+              ),
+              Container(
+                alignment: Alignment.centerLeft,
+                child: Text("${address.distanceText} væk",
+                    style: Theme.of(context).textTheme.display3),
+              ),
+            ],
+          ),
+          onPressed: () {},
         ),
-        subtitle: Text("${address.distanceText} væk",
-            style: Theme.of(context).textTheme.display3),
-        trailing: Text(
-          gasDisplay,
-          style: Theme.of(context).textTheme.display4,
-        ),
-        enabled: true,
-        onTap: () {},
-        title: Text(address.to.description.split(",")[0],
-            style: Theme.of(context).textTheme.body2),
-        dense: true);
+      ],
+    );
+  }
+}
+
+class PriceTile extends StatelessWidget {
+  const PriceTile(
+      {Key key,
+      @required this.price,
+      @required this.color,
+      @required this.icon,
+      @required this.description})
+      : super(key: key);
+
+  final String price;
+  final String description;
+  final Color color;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Icon(icon, size: 20, color: Colors.black38),
+              Text(
+                description,
+                style: Theme.of(context).textTheme.display2,
+              )
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(price.toString(), style: Theme.of(context).textTheme.display4),
+        ],
+      ),
+    );
   }
 }
 
