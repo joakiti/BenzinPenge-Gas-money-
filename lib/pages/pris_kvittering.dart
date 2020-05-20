@@ -3,10 +3,14 @@ import 'dart:async';
 import 'package:benzin_penge/mixin/error_message_mixin.dart';
 import 'package:benzin_penge/model/address.dart';
 import 'package:benzin_penge/model/address_distance.dart';
+import 'package:benzin_penge/pages/tilfoej_ruter.dart';
 import 'package:benzin_penge/repositories/implementations/distance_provider.dart';
 import 'package:benzin_penge/repositories/implementations/gasoline_price_provider.dart';
 import 'package:benzin_penge/ui_components/address_autocomplete_entry.dart';
+import 'package:benzin_penge/ui_components/address_icon.dart';
+import 'package:benzin_penge/ui_components/nav_icon.dart';
 import 'package:benzin_penge/ui_components/user_icon_picker.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -82,7 +86,64 @@ class _PrisKvitteringState extends State<PrisKvittering> with ErrorMessage {
                         return Column(
                           children: snapshot.data
                               .map(createListTileFromAddressDescription)
-                              .toList(),
+                              .toList()
+                                /**
+                           * Add a add more address entry.
+                           */
+                                ..add(
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  TilfoejRuter(
+                                                      widget.directionPoints)));
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: DottedBorder(
+                                        borderType: BorderType.RRect,
+                                        radius: Radius.circular(20),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color:
+                                                  Theme.of(context).cardColor,
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(15))),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Container(
+                                                  child: Container(
+                                                      margin:
+                                                          EdgeInsets.all(10),
+                                                      child: Row(
+                                                        children: <Widget>[
+                                                          Expanded(
+                                                            child: Text(
+                                                              "Tilføj flere destinationer",
+                                                              style: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .display2
+                                                                  .merge(TextStyle(
+                                                                      color: Colors
+                                                                          .black)),
+                                                            ),
+                                                          ),
+                                                          Icon(Icons.add,
+                                                              color:
+                                                                  Colors.black),
+                                                        ],
+                                                      )))
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                         );
                         /**
                          * We must wait for the view to be loaded, before we display a snack bar

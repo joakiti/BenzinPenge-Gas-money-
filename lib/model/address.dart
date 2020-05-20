@@ -32,6 +32,9 @@ class GAddress {
       if (types.contains("store")) {
         return Icons.store;
       }
+      if (types.contains("no_icon")) {
+        return null;
+      }
       if (types.contains("school")) {
         return Icons.school;
       }

@@ -1,4 +1,5 @@
 import 'package:benzin_penge/model/address.dart';
+import 'package:benzin_penge/pages/pris_kvittering.dart';
 import 'package:benzin_penge/pages/start_rute.dart';
 import 'package:benzin_penge/repositories/implementations/address_autocomplete_provider.dart';
 import 'package:benzin_penge/repositories/implementations/distance_provider.dart';
@@ -99,8 +100,8 @@ class MyApp extends StatelessWidget {
                       types: [],
                       placeId:
                           "Eh5EaWVzZWx2ZWosIEvDuGJlbmhhdm4sIERhbm1hcmsiLiosChQKEgnF7iEefVNSRhHjyLdOgUkwBxIUChIJse35PnlUUkYRqLw2nyZVnz4");
-                  //return PrisKvittering(directionPoints: [origin, destination, origin]);
-                  return StartRuteOplysninger();
+                  return PrisKvittering(directionPoints: [origin, destination, origin]);
+                  //return StartRuteOplysninger();
                   //return UserIconPicker();
                 }
                 if (snapshot.hasData && !snapshot.data) {

@@ -15,6 +15,7 @@ class GAddressIcon extends StatelessWidget {
     IconData iconData = GAddress.mapAddressTypeToIcon(address.types);
     return Row(
       children: <Widget>[
+        iconData != null ?
         Container(
           decoration: BoxDecoration(
               color: Theme.of(context).highlightColor,
@@ -32,7 +33,7 @@ class GAddressIcon extends StatelessWidget {
               ),
             ),
           ),
-        ),
+        ) : Container(),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.only(left: 12.0),
