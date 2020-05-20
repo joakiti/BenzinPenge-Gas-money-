@@ -7,7 +7,7 @@ import 'package:benzin_penge/ui_components/house_addresses.dart';
 import 'package:flutter/material.dart';
 
 class TilfoejRuter extends StatefulWidget {
-  final GAddress originAddress;
+  final List<GAddress> originAddress;
 
   TilfoejRuter(this.originAddress);
 
@@ -17,11 +17,13 @@ class TilfoejRuter extends StatefulWidget {
 
 class _TilfoejRuterState extends SearchInterface<TilfoejRuter>
     with ErrorMessage {
-  Set<GAddress> addresses = new Set();
+  List<GAddress> fromAddresses;
+  GAddress toAddress;
+  bool hasBegunTyping = false;
 
   @override
   void initState() {
-    addresses.add(widget.originAddress);
+    fromAddresses = widget.originAddress;
     super.initState();
   }
 
@@ -35,8 +37,8 @@ class _TilfoejRuterState extends SearchInterface<TilfoejRuter>
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) =>
-                PrisKvittering(directionPoints: addresses.toList())));
+            builder: (context) => PrisKvittering(
+                directionPoints: fromAddresses..add(toAddress))));
   }
 
   @override
@@ -45,43 +47,59 @@ class _TilfoejRuterState extends SearchInterface<TilfoejRuter>
       key: scaffoldKey,
       floatingActionButton: displayActionButton(),
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: <Widget>[
-            Row(
+            Column(
               children: <Widget>[
-                Flexible(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 16.0, top: 16.0, bottom: 16.0),
-                    child: Text(
-                      "Hvor skal du hen?",
-                      style: Theme.of(context).textTheme.headline,
+                Row(
+                  children: <Widget>[
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 16.0, top: 16.0, right: 23),
+                        //23 due to size of map icon
+                        child: AnimatedDefaultTextStyle(
+                          duration: Duration(milliseconds: 200),
+                          style: hasBegunTyping
+                              ? Theme.of(context)
+                                  .textTheme
+                                  .headline
+                                  .merge(TextStyle(fontSize: 12.0))
+                              : Theme.of(context).textTheme.headline,
+                          child: Text(
+                            "Hvor skal du hen?",
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                    /**
+                     *                 Expanded(
+                        child: Align(
+                        alignment: Alignment.centerRight,
+                        child: StoredAddresses(addresses.length, 23, 23)),
+                        ),
+                     */
+                  ],
                 ),
-                StoredAddresses(addresses.length),
+                AddressSearch(
+                    endRowWidget: Container(
+                      width: 35,
+                      height: 35,
+                    ),
+                    lookingUpResults: lookingUpResults,
+                    parent: this,
+                    onBegunTyping: () {
+                      setState(() {
+                        hasBegunTyping = true;
+                      });
+                    },
+                    scaffoldKey: scaffoldKey,
+                    onAddressSelected: onAddressSelected,
+                    nextPage: () {
+                      goToPrisKvittering();
+                    }),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: 16, left: 16),
-              child: Text("Ruten beregnes i rækkefølge af tilføjelser"),
-            ),
-            AddressSearch(
-                endRowWidget: Container(
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).highlightColor,
-                        borderRadius: BorderRadius.all(Radius.circular(45))),
-                    child: Icon(
-                      Icons.add,
-                      size: 35,
-                      color: Theme.of(context).backgroundColor,
-                    )),
-                lookingUpResults: lookingUpResults,
-                parent: this,
-                onBegunTyping: () {},
-                scaffoldKey: scaffoldKey,
-                onAddressSelected: onAddressSelected,
-                nextPage: () {}),
           ],
         ),
       ),
@@ -90,7 +108,7 @@ class _TilfoejRuterState extends SearchInterface<TilfoejRuter>
 
   onAddressSelected(GAddress selected) {
     setState(() {
-      addresses.add(selected);
+      toAddress = selected;
     });
   }
 
@@ -100,7 +118,8 @@ class _TilfoejRuterState extends SearchInterface<TilfoejRuter>
       Function onPressed = goToPrisKvittering;
       return FloatingActionButton(
         onPressed: onPressed,
-        child: Icon(Icons.receipt, color: Theme.of(context).scaffoldBackgroundColor),
+        child: Icon(Icons.receipt,
+            color: Theme.of(context).scaffoldBackgroundColor),
         backgroundColor: displayColor,
       );
     } else {

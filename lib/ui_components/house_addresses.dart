@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 class StoredAddresses extends StatelessWidget {
 
   final int noStored;
+  final double iconSize;
 
-  StoredAddresses(this.noStored);
+  StoredAddresses(this.noStored, this.iconSize);
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,7 @@ class StoredAddresses extends StatelessWidget {
       children: <Widget>[
         HouseIcon(
           icon: Icons.map,
-          iconSize: 70,
+          iconSize: iconSize,
           size: 12,
         ),
         Positioned.fill(
