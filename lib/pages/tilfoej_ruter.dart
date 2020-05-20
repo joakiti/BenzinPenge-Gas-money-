@@ -78,6 +78,7 @@ class _TilfoejRuterState extends SearchInterface<TilfoejRuter>
                     )),
                 lookingUpResults: lookingUpResults,
                 parent: this,
+                onBegunTyping: () {},
                 scaffoldKey: scaffoldKey,
                 onAddressSelected: onAddressSelected,
                 nextPage: () {}),

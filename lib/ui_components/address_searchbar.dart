@@ -84,6 +84,7 @@ class _AddressSearchBarState extends State<AddressSearchBar> with ErrorMessage {
     /**
      * The user has not entered anything new, so dont do anything.
      */
+    widget.onStartSearch();
     String searchText = widget.searchController.text;
     if (lastSearch == searchText) {
       return;

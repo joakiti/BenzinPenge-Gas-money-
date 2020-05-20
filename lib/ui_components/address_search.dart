@@ -14,6 +14,7 @@ class AddressSearch extends StatefulWidget {
   final bool lookingUpResults;
   final Widget endRowWidget;
   final Function nextPage;
+  final Function onBegunTyping;
 
   AddressSearch(
       {@required this.scaffoldKey,
@@ -21,7 +22,8 @@ class AddressSearch extends StatefulWidget {
       @required this.onAddressSelected,
       @required this.lookingUpResults,
       this.endRowWidget,
-      this.nextPage});
+      this.nextPage,
+      this.onBegunTyping});
 
   @override
   _AddressSearchState createState() => _AddressSearchState();
@@ -58,7 +60,9 @@ class _AddressSearchState extends State<AddressSearch> {
             searchController: _searchController,
             scaffoldKey: widget.scaffoldKey,
             parent: widget.parent,
-            onStartSearch: widget.parent.setLookingUpResultsTrue,
+            onStartSearch: () {
+              widget.onBegunTyping();
+              },
             onAddressReceived: onAddressesReceived,
           ),
           NotificationListener<ScrollUpdateNotification>(

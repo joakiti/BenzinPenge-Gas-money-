@@ -45,9 +45,6 @@ class _BehovForOplysningerState extends State<BehovForOplysninger> {
                       builder: (context) => StartRuteOplysninger()));
             },
             label: Text("Næste")),
-        appBar: AppBar(
-          title: Text("BenzinPenge"),
-        ),
         body: SafeArea(
           child: FutureBuilder(
             future: _showPage(),
@@ -60,8 +57,14 @@ class _BehovForOplysningerState extends State<BehovForOplysninger> {
                         Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: Text(
-                            "Vi har behov for nogle oplysninger om din kørsel",
-                            style: TextStyle(fontSize: 42),
+                            "Oplysninger",
+                            style: Theme.of(context).textTheme.headline,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Text(
+                            "Vi har behov for et circa tal på hvor langt din bil kører på literen. Vi bruger dette tal til at udregne prisen for dine fremtidige ruter. Skulle din stil ændrer sig kan du altid ændre tallet."
                           ),
                         ),
                         Center(
@@ -89,7 +92,7 @@ class _BehovForOplysningerState extends State<BehovForOplysninger> {
                               Spacer(),
                               Padding(
                                 padding: const EdgeInsets.only(right: 8.0),
-                                child: Text(_kmLiter.toString()),
+                                child: Text(_kmLiter.toString() + "km/l"),
                               ),
                             ],
                           ),

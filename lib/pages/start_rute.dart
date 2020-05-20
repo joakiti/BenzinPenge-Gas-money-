@@ -4,6 +4,7 @@ import 'package:benzin_penge/model/address.dart';
 import 'package:benzin_penge/pages/tilfoej_ruter.dart';
 import 'package:benzin_penge/ui_components/address_search.dart';
 import 'package:benzin_penge/ui_components/nav_icon.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class StartRuteOplysninger extends StatefulWidget {
@@ -14,7 +15,8 @@ class StartRuteOplysninger extends StatefulWidget {
 class _StartRuteOplysningerState extends SearchInterface<StartRuteOplysninger>
     with ErrorMessage {
   GAddress selectedAddress;
-  bool hasError;
+  bool hasError = false;
+  bool hasBegunTyping = false;
 
   @override
   void initState() {
@@ -57,10 +59,13 @@ class _StartRuteOplysningerState extends SearchInterface<StartRuteOplysninger>
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Text(
+                  child: AnimatedDefaultTextStyle(
+                    duration: Duration(milliseconds: 200),
+                    style: hasBegunTyping ? Theme.of(context).textTheme.headline.merge(TextStyle(fontSize: 12.0)) : Theme.of(context).textTheme.headline,
+                    child: Text(
                     "Hvor starter ruten?",
-                    style: Theme.of(context).textTheme.headline,
                   ),
+                  )
                 ),
                 Text(
                     "Du kan tilføje ekstra udgifter, og opdele betaling senere"),
@@ -68,6 +73,11 @@ class _StartRuteOplysningerState extends SearchInterface<StartRuteOplysninger>
                     endRowWidget: NavigationIcon(),
                     lookingUpResults: lookingUpResults,
                     parent: this,
+                    onBegunTyping: () {
+                      this.setState(() {
+                        hasBegunTyping = true;
+                      });
+                    },
                     scaffoldKey: scaffoldKey,
                     onAddressSelected: onAddressSelected,
                     nextPage: goToTilfoejRuter),
