@@ -104,8 +104,17 @@ class _AddressSearchBarState extends State<AddressSearchBar> with ErrorMessage {
       });
     }).timeout(Duration(milliseconds: 2000), onTimeout: () {
       widget.parent.setLookingUpResultsNull();
-      showSnackBarError(widget.scaffoldKey,
-          "Det ser ud til vi ikke kan finde nogle resultater til dig lige nu. Prøv igen senere.", errorMessageShowing);
+
+      setState(() {
+        showSnackBarError(
+            widget.scaffoldKey,
+            "Det ser ud til vi ikke kan finde nogle resultater til dig lige nu. Prøv igen senere.",
+            errorMessageShowing);
+        errorMessageShowing = true;
+        Timer t = new Timer(Duration(seconds: 5), () {
+          errorMessageShowing = false;
+        });
+      });
     });
   }
 
