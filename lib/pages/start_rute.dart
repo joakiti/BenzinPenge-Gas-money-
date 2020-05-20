@@ -14,6 +14,7 @@ class StartRuteOplysninger extends StatefulWidget {
 class _StartRuteOplysningerState extends SearchInterface<StartRuteOplysninger>
     with ErrorMessage {
   GAddress selectedAddress;
+  bool hasError;
 
   @override
   void initState() {
@@ -35,7 +36,7 @@ class _StartRuteOplysningerState extends SearchInterface<StartRuteOplysninger>
 
   void displayErrorUserDidNotPickAddress() {
     showSnackBarError(scaffoldKey,
-        "Du skal vælge en addresse fra søgningen, før du kan gå videre.");
+        "Du skal vælge en addresse fra søgningen, før du kan gå videre.", hasError);
   }
 
   @override

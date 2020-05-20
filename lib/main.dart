@@ -1,12 +1,9 @@
 import 'package:benzin_penge/model/address.dart';
-import 'package:benzin_penge/pages/pris_kvittering.dart';
 import 'package:benzin_penge/pages/start_rute.dart';
-import 'package:benzin_penge/pages/tilfoej_ruter.dart';
 import 'package:benzin_penge/repositories/implementations/address_autocomplete_provider.dart';
 import 'package:benzin_penge/repositories/implementations/distance_provider.dart';
 import 'package:benzin_penge/repositories/implementations/gasoline_price_provider.dart';
 import 'package:benzin_penge/repositories/implementations/user_images_provider.dart';
-import 'package:benzin_penge/ui_components/user_icon_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,7 +39,7 @@ class MyApp extends StatelessWidget {
           title: 'Flutter Demo',
           theme: ThemeData(
             primarySwatch: Colors.blue,
-            highlightColor: Color(0xFFFFDCA2),
+            highlightColor: Colors.blueGrey,
             scaffoldBackgroundColor: Color(0xFF1D1D1D),
             primaryIconTheme: IconThemeData(
               color: Color(0xFFFFDED5),
@@ -102,8 +99,8 @@ class MyApp extends StatelessWidget {
                       types: [],
                       placeId:
                           "Eh5EaWVzZWx2ZWosIEvDuGJlbmhhdm4sIERhbm1hcmsiLiosChQKEgnF7iEefVNSRhHjyLdOgUkwBxIUChIJse35PnlUUkYRqLw2nyZVnz4");
-                  return PrisKvittering(directionPoints: [origin, destination, origin]);
-                  //return StartRuteOplysninger();
+                  //return PrisKvittering(directionPoints: [origin, destination, origin]);
+                  return StartRuteOplysninger();
                   //return UserIconPicker();
                 }
                 if (snapshot.hasData && !snapshot.data) {

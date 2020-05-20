@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 abstract class ErrorMessage {
 
-  bool errorMessageShowing = false;
-  void showSnackBarError(GlobalKey<ScaffoldState> key, String msg) {
+  void showSnackBarError(GlobalKey<ScaffoldState> key, String msg, errorMessageShowing) {
     if (!errorMessageShowing) {
       key.currentState
         ..hideCurrentSnackBar()

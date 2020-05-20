@@ -1,15 +1,14 @@
+import 'dart:async';
+
 import 'package:benzin_penge/mixin/error_message_mixin.dart';
 import 'package:benzin_penge/model/address.dart';
 import 'package:benzin_penge/model/address_distance.dart';
 import 'package:benzin_penge/repositories/implementations/distance_provider.dart';
 import 'package:benzin_penge/repositories/implementations/gasoline_price_provider.dart';
 import 'package:benzin_penge/ui_components/address_autocomplete_entry.dart';
-import 'package:benzin_penge/ui_components/address_icon.dart';
 import 'package:benzin_penge/ui_components/user_icon_picker.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'dart:math';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -40,23 +39,31 @@ class _PrisKvitteringState extends State<PrisKvittering> with ErrorMessage {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(right: 25.0),
-        child: Container(
-            decoration: BoxDecoration(
-                border: Border.all(
-                    color: Theme.of(context).highlightColor, width: 3),
-                borderRadius: BorderRadius.all(Radius.circular(45))),
-            child: FloatingActionButton(
-              child: Icon(
-                Icons.person_add,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                showDialog(
-                    context: context, builder: (context) => UserIconPicker());
-              },
-            )),
+      floatingActionButton: Stack(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(left: 45.0),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: Theme.of(context).highlightColor, width: 3),
+                      borderRadius: BorderRadius.all(Radius.circular(45))),
+                  child: FloatingActionButton(
+                    child: Icon(
+                      Icons.person_add,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) => UserIconPicker());
+                    },
+                  )),
+            ),
+          ),
+        ],
       ),
       body: SafeArea(
         child: Stack(
@@ -94,17 +101,12 @@ class _PrisKvitteringState extends State<PrisKvittering> with ErrorMessage {
                     },
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 38.0),
+                    padding: const EdgeInsets.only(top: 18.0),
                     child: Padding(
                       padding: EdgeInsets.all(8),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(
-                            "Status",
-                            textAlign: TextAlign.start,
-                            style: Theme.of(context).textTheme.display4,
-                          ),
                           SizedBox(
                             height: 15,
                           ),
@@ -116,42 +118,37 @@ class _PrisKvitteringState extends State<PrisKvittering> with ErrorMessage {
                                 if (snapshot.hasData &&
                                     snapshot.connectionState ==
                                         ConnectionState.done) {
-                                  return Row(
+                                  return Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
-                                      PriceTile(
-                                          description: "Pris pr. liter",
-                                          icon: Icons.local_gas_station,
-                                          price:
-                                              "${addressesDistanceFetched.fold(0, (s, v) => s + v.priceOfDistanceInGas).toString()}kr/liter",
-                                          color:
-                                              Theme.of(context).highlightColor),
-                                      PriceTile(
-                                          description: "Total pris",
-                                          icon: Icons.monetization_on,
-                                          price: addressesDistanceFetched
-                                              .fold(
-                                                  0,
-                                                  (s, v) =>
-                                                      s +
-                                                      v.priceOfDistanceInGas)
-                                              .toString(),
-                                          color: Colors.redAccent),
-                                      PriceTile(
-                                          description: "Test",
-                                          icon: Icons.local_gas_station,
-                                          price: addressesDistanceFetched
-                                              .fold(
-                                                  0,
-                                                  (s, v) =>
-                                                      s +
-                                                      v.priceOfDistanceInGas)
-                                              .toString(),
-                                          color: Colors.indigoAccent),
-                                      SizedBox(
-                                        width: 40,
-                                      )
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 8.0, right: 8),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: Colors.black),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(25)),
+                                              color: Theme.of(context)
+                                                  .highlightColor),
+                                          child: Center(
+                                            child: Container(
+                                              margin: EdgeInsets.all(20),
+                                              child: PriceTile(
+                                                  price: totalPriceDistance(),
+                                                  noLiter: totalLiterUsed(),
+                                                  noKilometers:
+                                                      totalKilometersUsed(),
+                                                  description: "Samlet pris",
+                                                  icon: Icons.monetization_on,
+                                                  color: Colors.indigoAccent),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     ],
                                   );
                                 } else {
@@ -161,6 +158,9 @@ class _PrisKvitteringState extends State<PrisKvittering> with ErrorMessage {
                         ],
                       ),
                     ),
+                  ),
+                  Container(
+                    height: 70,
                   )
                 ]),
               ),
@@ -170,6 +170,11 @@ class _PrisKvitteringState extends State<PrisKvittering> with ErrorMessage {
         ),
       ),
     );
+  }
+
+  totalPriceDistance() {
+    return addressesDistanceFetched.fold(
+        0, (s, v) => s + v.priceOfDistanceInGas);
   }
 
   Column buildHeader() {
@@ -243,6 +248,8 @@ class _PrisKvitteringState extends State<PrisKvittering> with ErrorMessage {
     AddressDistance startingPoint = AddressDistance(
         distanceText: "0 km", from: directionPoints[0], to: directionPoints[0]);
     startingPoint.priceOfDistanceInGas = 0;
+    startingPoint.literUsed = 0;
+    startingPoint.distance = 0;
     startingPoint.icon =
         GAddress.mapAddressTypeToIcon(directionPoints[0].types);
     result.add(startingPoint);
@@ -299,6 +306,18 @@ class _PrisKvitteringState extends State<PrisKvittering> with ErrorMessage {
       ],
     );
   }
+
+  totalLiterUsed() {
+    return addressesDistanceFetched.fold(0.0, (t, v) {
+      return t + v.literUsed;
+    });
+  }
+
+  totalKilometersUsed() {
+    return addressesDistanceFetched.fold(0.0, (t, v) {
+      return num.parse(((t + (v.distance / 1000)).toStringAsFixed(2)));
+    });
+  }
 }
 
 class PriceTile extends StatelessWidget {
@@ -306,35 +325,95 @@ class PriceTile extends StatelessWidget {
       {Key key,
       @required this.price,
       @required this.color,
+      @required this.noKilometers,
       @required this.icon,
-      @required this.description})
+      @required this.description,
+      @required this.noLiter})
       : super(key: key);
-
-  final String price;
+  final int price;
+  final double noLiter;
+  final double noKilometers;
   final String description;
   final Color color;
   final IconData icon;
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Text(
+              description,
+              style: Theme.of(context)
+                  .textTheme
+                  .display4
+                  .merge(TextStyle(fontSize: 17, color: Colors.white)),
+            ),
+            Spacer(),
+            Icon(icon, size: 20, color: Colors.white),
+          ],
+        ),
+        Divider(
+          color: Colors.white,
+        ),
+        buildPriceEntry(
+            context,
+            "Pris pr. liter",
+            "${RepositoryProvider.of<GasolinePricesProvider>(context).gasPrice.toString()} kr pr. liter",
+            Icons.local_gas_station),
+        Divider(
+          color: Colors.white,
+        ),
+        buildPriceEntry(context, "Antal liter", "${noLiter.toString()} L.",
+            Icons.invert_colors),
+        Divider(
+          color: Colors.white,
+        ),
+        buildPriceEntry(context, "Antal km", "${noKilometers.toString()} km",
+            Icons.confirmation_number),
+        Divider(
+          color: Colors.white,
+        ),
+        Row(
+          children: <Widget>[
+            Text("DKK",
+                style: Theme.of(context)
+                    .textTheme
+                    .display4
+                    .merge(TextStyle(color: Colors.white))),
+            Spacer(),
+            Text(price.toString() + ",-",
+                style: Theme.of(context)
+                    .textTheme
+                    .display4
+                    .merge(TextStyle(color: Colors.white))),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Container buildPriceEntry(
+      BuildContext context, String description, String end, IconData icon) {
+    return Container(
+      margin: EdgeInsets.all(8),
+      child: Row(
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              Icon(icon, size: 20, color: Colors.black38),
-              Text(
-                description,
-                style: Theme.of(context).textTheme.display2,
-              )
-            ],
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Text(price.toString(), style: Theme.of(context).textTheme.display4),
+          Icon(icon, color: Colors.white70),
+          Text(description,
+              style: Theme.of(context)
+                  .textTheme
+                  .display3
+                  .merge(TextStyle(color: Colors.white70))),
+          Spacer(),
+          Text(end,
+              style: Theme.of(context)
+                  .textTheme
+                  .display3
+                  .merge(TextStyle(color: Colors.white70)))
         ],
       ),
     );

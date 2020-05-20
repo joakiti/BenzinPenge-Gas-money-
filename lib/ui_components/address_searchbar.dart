@@ -28,6 +28,7 @@ class AddressSearchBar extends StatefulWidget {
 
 class _AddressSearchBarState extends State<AddressSearchBar> with ErrorMessage {
   String lastSearch;
+  bool errorMessageShowing = false;
 
   @override
   void initState() {
@@ -104,7 +105,7 @@ class _AddressSearchBarState extends State<AddressSearchBar> with ErrorMessage {
     }).timeout(Duration(milliseconds: 2000), onTimeout: () {
       widget.parent.setLookingUpResultsNull();
       showSnackBarError(widget.scaffoldKey,
-          "Det ser ud til vi ikke kan finde nogle resultater til dig lige nu. Prøv igen senere.");
+          "Det ser ud til vi ikke kan finde nogle resultater til dig lige nu. Prøv igen senere.", errorMessageShowing);
     });
   }
 
