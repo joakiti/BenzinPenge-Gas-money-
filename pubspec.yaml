@@ -32,6 +32,7 @@ dependencies:
   provider: ^4.0.4
   synchronized: ^2.2.0
   dotted_border: ^1.0.5
+  modal_bottom_sheet: ^0.1.5
   geolocator: ^5.1.4+2
   google_maps_webservice: ^0.0.16
   place_picker: ^0.9.11

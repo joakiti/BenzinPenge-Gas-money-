@@ -100,8 +100,8 @@ class MyApp extends StatelessWidget {
                       types: [],
                       placeId:
                           "Eh5EaWVzZWx2ZWosIEvDuGJlbmhhdm4sIERhbm1hcmsiLiosChQKEgnF7iEefVNSRhHjyLdOgUkwBxIUChIJse35PnlUUkYRqLw2nyZVnz4");
-                  return PrisKvittering(directionPoints: [origin, destination, origin]);
-                  //return StartRuteOplysninger();
+                  //return PrisKvittering(directionPoints: [origin, destination, origin]);
+                  return StartRuteOplysninger();
                   //return UserIconPicker();
                 }
                 if (snapshot.hasData && !snapshot.data) {
