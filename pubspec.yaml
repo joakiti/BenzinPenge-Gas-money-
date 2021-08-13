@@ -36,7 +36,7 @@ dependencies:
   geolocator: ^5.1.4+2
   google_maps_webservice: ^0.0.16
   place_picker: ^0.9.11
-  dio: ^2.1.13
+  dio: ^3.0.9
   auto_size_text: ^2.1.0
   dotted_line: ^1.0.1
   uuid: 2.0.1
