@@ -8,7 +8,9 @@ import 'package:benzin_penge/repositories/implementations/distance_provider.dart
 import 'package:benzin_penge/repositories/implementations/gasoline_price_provider.dart';
 import 'package:benzin_penge/ui_components/address_autocomplete_entry.dart';
 import 'package:benzin_penge/ui_components/address_icon.dart';
+import 'package:benzin_penge/ui_components/modal_fit.dart';
 import 'package:benzin_penge/ui_components/nav_icon.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:benzin_penge/ui_components/user_icon_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dotted_line/dotted_line.dart';
@@ -83,6 +85,9 @@ class _PrisKvitteringState extends State<PrisKvittering> with ErrorMessage {
                     builder: (context,
                         AsyncSnapshot<List<AddressDistance>> snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
+                        if (snapshot.data == null) {
+                          return AddAdditionalAddress(widget: widget);
+                        }
                         return Column(
                           children: snapshot.data
                               .map(createListTileFromAddressDescription)
@@ -91,58 +96,7 @@ class _PrisKvitteringState extends State<PrisKvittering> with ErrorMessage {
                            * Add a add more address entry.
                            */
                                 ..add(
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  TilfoejRuter(
-                                                      widget.directionPoints)));
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: DottedBorder(
-                                        borderType: BorderType.RRect,
-                                        radius: Radius.circular(20),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color:
-                                                  Theme.of(context).cardColor,
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(15))),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: <Widget>[
-                                              Container(
-                                                  child: Container(
-                                                      margin:
-                                                          EdgeInsets.all(10),
-                                                      child: Row(
-                                                        children: <Widget>[
-                                                          Expanded(
-                                                            child: Text(
-                                                              "Tilføj flere destinationer",
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .display2
-                                                                  .merge(TextStyle(
-                                                                      color: Colors
-                                                                          .black)),
-                                                            ),
-                                                          ),
-                                                          Icon(Icons.add,
-                                                              color:
-                                                                  Colors.black),
-                                                        ],
-                                                      )))
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                  AddAdditionalAddress(widget: widget),
                                 ),
                         );
                         /**
@@ -342,29 +296,51 @@ class _PrisKvitteringState extends State<PrisKvittering> with ErrorMessage {
       gasDisplay = "";
     }
 
-    return Column(
-      children: <Widget>[
-        AddressAutoCompleteEntry(
-          address: address.to,
-          buttonEndRow: Column(
-            children: <Widget>[
-              Text(
-                gasDisplay,
-                style: Theme.of(context)
-                    .textTheme
-                    .display4
-                    .merge(TextStyle(color: Theme.of(context).cardColor)),
-              ),
-              Container(
-                alignment: Alignment.centerLeft,
-                child: Text("${address.distanceText} væk",
-                    style: Theme.of(context).textTheme.display3),
-              ),
-            ],
+    return InkWell(
+      onLongPress: () {
+        showMaterialModalBottomSheet(
+            context: context,
+            expand: false,
+            builder: (context, scrollController) => ModalFit(
+                  scrollController: scrollController,
+                  onDeletePressed: () {
+                    var addresses = widget.directionPoints;
+                    addresses.removeWhere((element) =>
+                        element.description == address.to.description);
+                    setState(() {
+                      addressDistanceFuture =
+                          seedAddressDistance(widget.directionPoints);
+                      addressDistanceFuture.then((v) {
+                        addressesDistanceFetched = v;
+                      });
+                    });
+                  },
+                ));
+      },
+      child: Column(
+        children: <Widget>[
+          AddressAutoCompleteEntry(
+            address: address.to,
+            buttonEndRow: Column(
+              children: <Widget>[
+                Text(
+                  gasDisplay,
+                  style: Theme.of(context)
+                      .textTheme
+                      .display4
+                      .merge(TextStyle(color: Theme.of(context).cardColor)),
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text("${address.distanceText} væk",
+                      style: Theme.of(context).textTheme.display3),
+                ),
+              ],
+            ),
+            onPressed: () {},
           ),
-          onPressed: () {},
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -378,6 +354,61 @@ class _PrisKvitteringState extends State<PrisKvittering> with ErrorMessage {
     return addressesDistanceFetched.fold(0.0, (t, v) {
       return num.parse(((t + (v.distance / 1000)).toStringAsFixed(2)));
     });
+  }
+}
+
+class AddAdditionalAddress extends StatelessWidget {
+  const AddAdditionalAddress({
+    Key key,
+    @required this.widget,
+  }) : super(key: key);
+
+  final PrisKvittering widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => TilfoejRuter(widget.directionPoints)));
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: DottedBorder(
+          borderType: BorderType.RRect,
+          radius: Radius.circular(20),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.all(Radius.circular(15))),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(
+                    child: Container(
+                        margin: EdgeInsets.all(10),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Text(
+                                "Tilføj flere destinationer",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .display2
+                                    .merge(TextStyle(color: Colors.black)),
+                              ),
+                            ),
+                            Icon(Icons.add, color: Colors.black),
+                          ],
+                        )))
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 
